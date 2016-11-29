@@ -1,0 +1,52 @@
+<form class="form-horizontal" action='/insert' method="POST">
+    <fieldset>
+        <div id="legend">
+            <legend class="">Register</legend>
+        </div>
+        <div class="control-group">
+            <!-- E-mail -->
+            <label class="control-label" for="email">E-mail</label>
+            <div class="controls">
+                <input type="text" id="email" name="email" placeholder="" class="input-xlarge">
+                <p class="help-block">Please provide your E-mail</p>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <!-- Username -->
+            <label class="control-label" for="password">Password</label>
+            <div class="controls">
+                <input type="password" id="password" name="password" placeholder="" class="input-xlarge">
+                <p class="help-block"></p>
+            </div>
+        </div>
+        <div class="control-group">
+            <!-- Username -->
+            <label class="control-label" for="rePassword">Re-Password</label>
+            <div class="controls">
+                <input type="password" id="rePassword" name="re-password" placeholder="" class="input-xlarge">
+                <p class="help-block">Password and Re-Password must be same.</p>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <!-- Button -->
+            <div class="controls">
+                <button type="sumbit" class="btn btn-success">Register</button>
+            </div>
+        </div>
+    </fieldset>
+    <a href="/login">Login</a>
+    <fieldset>
+        <h3>Get Data</h3>
+        <div class="">
+            <a href="/get-data">Fetch data</a>
+            {{# each items}}
+            <article class="">
+                <div>Email : {{this.email}}</div>
+                <div>UserName : {{this.password}}</div>
+            </article>
+            {{/each}}
+        </div>
+    </fieldset>
+</form>
