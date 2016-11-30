@@ -19,6 +19,26 @@ router.get('/login', function(req,res,next) {
     res.render('login');
 });
 
+/* Simple Auth */
+
+router.post('/auth', function(req,res,next) {
+    var email = req.body.username;
+    var password = req.body.password;
+    console.log(email);
+    console.log(password);
+    UserData.findOne({email: email,password: password}, function(err, user) {
+        if (err) {
+            console.log(err);
+            return res.status(500).send();
+        }
+        if (!user) {
+            console.log('No result found..!');
+            res.render('login', {fail:'we dont recognize that email address or phone number. Please try again.'});
+            // return res.status(400).send();
+        }
+    })
+});
+
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express', name: 'Uday Hosamani' });
