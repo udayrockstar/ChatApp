@@ -7,9 +7,19 @@ var bodyParser = require('body-parser');
 
 var index = require('./routes/index');
 var users = require('./routes/users');
+var session = require('express-session');
+var sessionOptions = {
+  secret: "secret",
+  resave : true,
+  saveUninitialized : false
+};
 
 var app = express();
+// call socket.io to the app
 
+app.io = require('socket.io')();
+// express session
+app.use(session(sessionOptions));
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
@@ -41,6 +51,17 @@ app.use(function(err, req, res, next) {
   // render the error page
   res.status(err.status || 500);
   res.render('error');
+});
+
+
+
+//start listen with socket.io
+app.io.on('connection', function(socket){
+  console.log('a user connected');
+  socket.on('new message', function(msg){
+    console.log('new message: ' + msg);
+    app.io.emit('chat message', msg);
+  });
 });
 
 module.exports = app;

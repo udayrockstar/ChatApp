@@ -4,6 +4,16 @@
             <legend class="">Register</legend>
             <a class="btn btn-success" href="/login">Login</a>
         </div>
+
+        <div class="control-group">
+            <!-- E-mail -->
+            <label class="control-label" for="email">Name</label>
+            <div class="controls">
+                <input type="text" id="name" name="name" placeholder="Name" class="input-xlarge">
+                <p class="help-block">Please provide your name</p>
+            </div>
+        </div>
+
         <div class="control-group">
             <!-- E-mail -->
             <label class="control-label" for="email">E-mail</label>
@@ -51,3 +61,23 @@
         </div>
     </fieldset>
 </form>
+<h3>Welcome to Chat app</h3>
+<ul id="messages-area"></ul>
+<form id="form" onsubmit="return false;">
+    <input id="new-message" type="text" /><button onclick="sendFunction()">Send</button>
+</form>
+<script  type="text/javascript" src="/socket.io/socket.io.js"></script>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+<script>
+    var socket = io();
+
+    function sendFunction() {
+        socket.emit('new message', $('#new-message').val());
+        $('#new-message').val('');
+    }
+    socket.on('chat message', function(msg) {
+        $('#messages-area').append($('<li>').text(msg));
+    });
+</script>
