@@ -2,9 +2,6 @@ var express = require('express');
 var router = express.Router();
 var mongoose = require('mongoose');
 
-
-
-
 var app = express();
 // call socket.io to the app
 
@@ -26,48 +23,49 @@ var UserData = mongoose.model('RegistrationData', userDataSchema);
 express.io = require('socket.io')();
 
 /* GET login page */
-router.get('/login', function(req,res,next) {
+router.get('/login', function(req, res, next) {
     res.render('login');
 });
 
 /* Simple Auth */
 
-router.post('/auth', function(req,res,next) {
+router.post('/auth', function(req, res, next) {
     var email = req.body.username;
     var password = req.body.password;
-    UserData.findOne({email: email,password: password}, function(err, user) {
-        //req.session.login_id = user._id;
-        // console.log(user._id+"This is user id ohh..!");
+    UserData.findOne({
+        email: email,
+        password: password
+    }, function(err, user) {
         if (err) {
             return res.status(500).send();
         }
         if (!user) {
-            return res.render('login', {fail:'we dont recognize that email address or password. Please try again.'});
+            return res.render('login', {
+                fail: 'we dont recognize that email address or password. Please try again.'
+            });
         }
         var listUsers = UserData.find({}, function(err, users) {
             // console.log("Is Coming here???"+user._id);
-            return res.render('dashboard', {count: req.session.views, users:users, name: user.name});
+            return res.render('dashboard', {
+                count: req.session.views,
+                users: users,
+                name: user.name
+            });
         });
-        console.log("From here");
-
         if (!req.session.views) req.session.views = 1;
-            req.session.views += 1;
+        req.session.views += 1;
 
     })
 });
 
-
-
 // start listen with socket.io
-express.io.on('connection', function(socket){
-  console.log('a user connected');
-
-  socket.on('new message', function(msg){
-    console.log('new message: ' + msg);
-    express.io.emit('chat message', msg);
-  });
+express.io.on('connection', function(socket) {
+    console.log('a user connected');
+    socket.on('new message', function(msg) {
+        console.log('new message: ' + msg);
+        express.io.emit('chat message', msg);
+    });
 });
-
 
 
 /* logout function */
@@ -79,24 +77,29 @@ router.get('/logout', function(req, res, next) {
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Chat App'});
+    res.render('index', {
+        title: 'Chat App'
+    });
 });
 
 /* get all data and show */
-router.get('/get-data', function(req,res,next){
+router.get('/get-data', function(req, res, next) {
     UserData.find()
-        .then(function(doc){
-            res.render('index',{items: doc});
-        })
+        .then(function(doc) {
+            res.render('index', {
+                items: doc
+            });
+        });
 });
 
-router.post('/insert', function(req,res,next){
+/* Insert the data into mongo db */
+router.post('/insert', function(req, res, next) {
     var datetime = new Date();
     var item = {
-        name:       req.body.name,
-        email:      req.body.email,
-        password:   req.body.password,
-        createdAt:  datetime,
+        name: req.body.name,
+        email: req.body.email,
+        password: req.body.password,
+        createdAt: datetime,
     };
     var data = new UserData(item);
     data.save();

@@ -58,9 +58,9 @@ app.use(function(err, req, res, next) {
 //start listen with socket.io
 app.io.on('connection', function(socket){
   console.log('a user connected');
-  socket.on('new message', function(msg){
-    console.log('new message: ' + msg);
-    app.io.emit('chat message', msg);
+  socket.on('new message', function(msg,user){
+    console.log('new message: ' + msg+ " and from " +user);
+    app.io.emit('chat message', msg,user);
   });
 });
 
